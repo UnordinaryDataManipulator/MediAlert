@@ -6,50 +6,21 @@ part 'medicine.freezed.dart';
 part 'medicine.g.dart';
 
 @freezed
+@HiveType(typeId: 1)
 class Medicine with _$Medicine {
-  @HiveType(typeId: 1)
+  @HiveField(0)
   const factory Medicine({
-    @HiveField(0)
-    required String id,
-    
-    @HiveField(1)
-    required String name,
-    
-    @HiveField(2)
-    required String dosage,
-    
-    @HiveField(3)
-    required String frequency,
-    
-    @HiveField(4)
-    DateTime? expiryDate,
-    
-    @HiveField(5)
-    required int currentQuantity,
-    
-    @HiveField(6)
-    required int minimumQuantity,
-    
-    @HiveField(7)
-    String? instructions,
-    
-    @HiveField(8)
-    String? barcode,
-    
-    @HiveField(9)
-    String? imageUrl,
-    
-    @HiveField(10)
-    @Default([]) List<DateTime> scheduledTimes,
-    
-    @HiveField(11)
-    @Default({}) Map<String, dynamic> metadata,
-
-    @HiveField(12)
-    String? prescriptionPhotoUrl,
-
-    @HiveField(13)
-    @Default([]) List<MedicineHistoryEntry> history,
+    @HiveField(0) required String id,
+    @HiveField(1) required String name,
+    @HiveField(2) required String dosage,
+    @HiveField(3) required String frequency,
+    @HiveField(4) required int currentQuantity,
+    @HiveField(5) required int minimumQuantity,
+    @HiveField(6) String? instructions,
+    @HiveField(7) String? imageUrl,
+    @HiveField(8) required List<DateTime> scheduledTimes,
+    @HiveField(9) DateTime? expiryDate,
+    @HiveField(10) Map<String, dynamic> metadata = const {},
   }) = _Medicine;
 
   factory Medicine.fromJson(Map<String, dynamic> json) =>

@@ -10,6 +10,15 @@ workflows:
         - google_play
       vars:
         PACKAGE_NAME: "com.example.medialert"
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.gradle/caches
+        - $HOME/.gradle/wrapper
+        - $HOME/Library/Caches/CocoaPods
+        - build/
+        - .dart_tool/
+        - .pub-cache/
     scripts:
       - name: Set up local.properties
         script: |
@@ -28,8 +37,7 @@ workflows:
           flutter build apk --release
     artifacts:
       - build/**/outputs/**/*.apk
-      - build/**/outputs/**/mapping.txt
-      - flutter_drive.log
+      - build/**/outputs/**/mapping.txt      - flutter_drive.log
     publishing:
       email:
         recipients:

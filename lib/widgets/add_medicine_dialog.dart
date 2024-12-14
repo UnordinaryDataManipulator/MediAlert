@@ -6,7 +6,7 @@ import '../utils/constants.dart';
 import '../services/reminder_service.dart';
 import 'package:uuid/uuid.dart';
 
-class AddMedicineDialog extends ConsumerStatefulWidget {
+class AddMedicineDialog extends StatefulWidget {
   final String familyMemberId;
   final Medicine? medicine;
 
@@ -17,46 +17,42 @@ class AddMedicineDialog extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<AddMedicineDialog> createState() => _AddMedicineDialogState();
+  _AddMedicineDialogState createState() => _AddMedicineDialogState();
 }
 
-class _AddMedicineDialogState extends ConsumerState<AddMedicineDialog> {
+class _AddMedicineDialogState extends State<AddMedicineDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _nameController;
-  late final TextEditingController _dosageController;
-  late final TextEditingController _instructionsController;
-  late DateTime? _expiryDate;
-  late int _currentQuantity;
-  late int _minimumQuantity;
-  String _frequency = 'once a day';
-
-  final List<String> _frequencies = [
-    'once a day',
-    'twice a day',
-    'three times a day',
-    'every 4 hours',
-    'every 6 hours',
-    'every 8 hours',
-    'every 12 hours',
-    'as needed',
-  ];
+  final _nameController = TextEditingController();
+  final _dosageController = TextEditingController();
+  final _frequencyController = TextEditingController();
+  final _quantityController = TextEditingController();
+  final _minQuantityController = TextEditingController();
+  final _instructionsController = TextEditingController();
+  DateTime? _expiryDate;
+  String? _imageUrl;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.medicine?.name);
-    _dosageController = TextEditingController(text: widget.medicine?.dosage);
-    _instructionsController = TextEditingController(text: widget.medicine?.instructions);
-    _expiryDate = widget.medicine?.expiryDate;
-    _currentQuantity = widget.medicine?.currentQuantity ?? 0;
-    _minimumQuantity = widget.medicine?.minimumQuantity ?? AppConstants.defaultLowStockThreshold;
-    _frequency = widget.medicine?.frequency ?? _frequencies.first;
+    if (widget.medicine != null) {
+      _nameController.text = widget.medicine!.name;
+      _dosageController.text = widget.medicine!.dosage;
+      _frequencyController.text = widget.medicine!.frequency;
+      _quantityController.text = widget.medicine!.currentQuantity.toString();
+      _minQuantityController.text = widget.medicine!.minimumQuantity.toString();
+      _instructionsController.text = widget.medicine!.instructions ?? '';
+      _expiryDate = widget.medicine!.expiryDate;
+      _imageUrl = widget.medicine!.imageUrl;
+    }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _dosageController.dispose();
+    _frequencyController.dispose();
+    _quantityController.dispose();
+    _minQuantityController.dispose();
     _instructionsController.dispose();
     super.dispose();
   }
@@ -116,23 +112,16 @@ class _AddMedicineDialogState extends ConsumerState<AddMedicineDialog> {
                 },
               ),
               const SizedBox(height: AppTheme.smallPadding),
-              DropdownButtonFormField<String>(
-                value: _frequency,
+              TextFormField(
+                controller: _frequencyController,
                 decoration: const InputDecoration(
                   labelText: 'Frequency',
                 ),
-                items: _frequencies.map((String frequency) {
-                  return DropdownMenuItem<String>(
-                    value: frequency,
-                    child: Text(frequency),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      _frequency = newValue;
-                    });
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return ErrorMessages.requiredField;
                   }
+                  return null;
                 },
               ),
               const SizedBox(height: AppTheme.smallPadding),
@@ -140,7 +129,7 @@ class _AddMedicineDialogState extends ConsumerState<AddMedicineDialog> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      initialValue: _currentQuantity.toString(),
+                      controller: _quantityController,
                       decoration: const InputDecoration(
                         labelText: 'Current Stock',
                       ),
@@ -166,7 +155,7 @@ class _AddMedicineDialogState extends ConsumerState<AddMedicineDialog> {
                   const SizedBox(width: AppTheme.defaultPadding),
                   Expanded(
                     child: TextFormField(
-                      initialValue: _minimumQuantity.toString(),
+                      controller: _minQuantityController,
                       decoration: const InputDecoration(
                         labelText: 'Minimum Stock',
                       ),
@@ -249,7 +238,7 @@ class _AddMedicineDialogState extends ConsumerState<AddMedicineDialog> {
                 id: widget.medicine?.id ?? const Uuid().v4(),
                 name: _nameController.text,
                 dosage: _dosageController.text,
-                frequency: _frequency,
+                frequency: _frequencyController.text,
                 expiryDate: _expiryDate,
                 currentQuantity: _currentQuantity,
                 minimumQuantity: _minimumQuantity,

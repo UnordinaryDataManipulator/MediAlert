@@ -1,45 +1,35 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../models/family_member.dart';
 import '../models/medicine.dart';
-import '../services/export_service.dart';
-import '../services/reminder_service.dart';
-import '../services/barcode_service.dart';
-import '../services/cloud_sync_service.dart';
+import '../services/database_service.dart';
+import '../services/notification_service.dart';
 
 class AppState extends ChangeNotifier {
-  late Box<FamilyMember> _familyMembersBox;
-  late Box<Medicine> _medicinesBox;
-  final ExportService _exportService = ExportService();
-  final ReminderService _reminderService = ReminderService();
-  final BarcodeService _barcodeService = BarcodeService();
-  final CloudSyncService _cloudSyncService = CloudSyncService();
+  final DatabaseService _databaseService = DatabaseService();
+  final NotificationService _notificationService = NotificationService();
 
-  bool _isLoading = false;
-  String? _error;
+  List<FamilyMember> _familyMembers = [];
+  List<Medicine> _medicines = [];
 
-  bool get isLoading => _isLoading;
-  String? get error => _error;
+  List<FamilyMember> get familyMembers => _familyMembers;
+  List<Medicine> get medicines => _medicines;
 
   AppState() {
-    _initHive();
-    _reminderService.initialize();
+    _initializeApp();
   }
 
-  // ... (keep existing methods)
-
-  void addMedicine(Medicine medicine) {
-    _medicinesBox.add(medicine);
-    _reminderService.scheduleMedicineReminder(medicine);
+  Future<void> _initializeApp() async {
+    await _databaseService.initialize();
+    await _loadData();
     notifyListeners();
   }
 
-  void updateMedicine(Medicine medicine) {
-    medicine.save();
-    _reminderService.scheduleMedicineReminder(medicine);
-    notifyListeners();
+  Future<void> _loadData() async {
+    _familyMembers = await _databaseService.getFamilyMembers();
+    _medicines = await _databaseService.getMedicines();
   }
 
-  // ... (keep other existing methods)
+  // Rest of your AppState implementation...
 }
 
