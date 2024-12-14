@@ -1,0 +1,82 @@
+buildscript {
+    ext.kotlin_version = '1.9.0'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    
+    // Apply common configurations to all projects
+    project.plugins.withId('com.android.application') {
+        android {
+            // Disable BuildConfig generation for libraries
+            buildFeatures {
+                buildConfig = false
+            }
+        }
+    }
+    
+    // Optimize dependency resolution
+    configurations.all {
+        resolutionStrategy {
+            // Cache dynamic versions for 10 minutes
+            cacheDynamicVersionsFor 10, 'minutes'
+            // Cache changing modules for 4 hours
+            cacheChangingModulesFor 4, 'hours'
+        }
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    
+    project.evaluationDependsOn(':app')
+    
+    // Optimize dependency resolution
+    project.configurations.all {
+        resolutionStrategy {
+            // Force specific versions to avoid conflicts
+            force 'androidx.core:core:1.9.0'
+            force 'androidx.lifecycle:lifecycle-runtime:2.6.1'
+            
+            // Optimize dependency resolution
+            eachDependency { details ->
+                if (details.requested.group == 'com.android.support'
+                        && !details.requested.name.contains('multidex') ) {
+                    details.useVersion "27.1.1"
+                }
+                if (details.requested.group == 'androidx.core'
+                        && !details.requested.name.contains('androidx') ) {
+                    details.useVersion "1.1.0"
+                }
+            }
+            
+            // Cache dependencies
+            cacheDynamicVersionsFor 10, 'minutes'
+            cacheChangingModulesFor 4, 'hours'
+        }
+    }
+    
+    // Optimize task execution
+    tasks.withType(JavaCompile) {
+        options.incremental = true
+        options.fork = true
+        options.failOnError = false
+    }
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

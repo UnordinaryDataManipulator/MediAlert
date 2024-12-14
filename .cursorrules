@@ -1,0 +1,141 @@
+### Cursor Rules for Medialert App
+
+You are an expert in Flutter and Dart, skilled at building mobile applications with modern design principles and best practices. Your task is to generate optimized, maintainable, and cross-platform code for the Medialert app using the Flutter framework.
+
+---
+
+### **Key Principles**
+- Write concise, technical Dart code with accurate examples.
+- Use functional and declarative programming patterns where appropriate.
+- Prefer composition over inheritance.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Structure files: exported widget, subwidgets, helpers, static content, types.
+
+---
+
+### **Code Style and Structure**
+- Write **clean and idiomatic Dart code**:
+  - Use **CamelCase** for variables and functions (`scheduleNotification`).
+  - Use **PascalCase** for classes and enums (`MedicineReminder`).
+- Follow the **single responsibility principle** for widgets, classes, and functions.
+- Break down the UI into **small reusable widgets**.
+- Use **null safety** effectively to prevent runtime crashes.
+- Leverage **Freezed** for immutable state classes and unions.
+- Use arrow syntax for simple functions and methods.
+- Use trailing commas for better formatting and diffs.
+
+---
+
+### **Project Organization**
+- Structure the project into feature-based folders:
+  ```
+  lib/
+    models/
+    services/
+    screens/
+    widgets/
+    utils/
+  ```
+- Use `models` for app-specific data classes and `services` for backend and API logic.
+- Use `screens` for major UI pages and `widgets` for reusable components.
+- Place helper functions and constants in `utils`.
+
+---
+
+### **Flutter UI Guidelines**
+- Use **Material Design components** for consistent cross-platform aesthetics.
+- Prefer **StatelessWidget** unless state management is required.
+- Use **MediaQuery** and **LayoutBuilder** for responsive design:
+  - Ensure proper scaling across devices by using `EdgeInsets.symmetric`, `SizedBox`, and flexible layouts.
+- Include **light and dark themes** for accessibility.
+- Use `Theme.of(context).textTheme.titleLarge` instead of `headline6`, and other modern equivalents.
+
+---
+
+### **State Management**
+- Use **Riverpod** for managing app state.
+- Ensure that state updates are efficient:
+  - Avoid rebuilding unnecessary widgets.
+- Use `AsyncNotifierProvider` and `NotifierProvider` over `StateProvider`.
+- Implement proper cancellation of asynchronous operations when widgets are disposed.
+- Use `ref.invalidate()` for manually triggering provider updates.
+
+---
+
+### **Flutter-Specific Features**
+- Use **Navigator 2.0** or a routing library (like `go_router`) for navigation:
+  - Support deep linking and modular routes.
+  - Use named routes to ensure clear and maintainable navigation.
+- Use `async`/`await` for asynchronous tasks like API calls.
+- Handle errors in asynchronous operations with `try-catch` blocks.
+- Use **RefreshIndicator** for pull-to-refresh functionality.
+
+---
+
+### **Notifications and Reminders**
+- Use the **flutter_local_notifications** package to implement medication reminders:
+  - Schedule notifications using platform-specific channels.
+  - Customize notification sounds and vibration patterns.
+- Provide a **snooze** or **dismiss** option within notifications.
+
+---
+
+### **Database and Storage**
+- Use **Hive** or **Sqflite** for local storage:
+  - Store structured data such as medication schedules and user preferences.
+  - Optimize database queries for fast read/write operations.
+- Store sensitive data (e.g., user authentication tokens) securely using **Flutter Secure Storage**.
+
+---
+
+### **Error Handling and Validation**
+- Validate all user inputs and display helpful error messages:
+  - Use Flutter's built-in validation in `TextFormField`.
+- Handle API errors gracefully with retry mechanisms.
+- Log critical errors using `FlutterError.onError` and external monitoring tools like **Sentry**.
+- Use `SelectableText.rich` instead of SnackBars for displaying errors with red color for visibility.
+- Handle empty states within the displaying screen.
+
+---
+
+### **Performance Optimization**
+- Use `const` constructors for stateless widgets where possible.
+- Minimize re-renders with `shouldRebuild` and memoized widgets.
+- Leverage **Flutter DevTools** to identify performance bottlenecks.
+- Implement list view optimizations (e.g., `ListView.builder`).
+- Use `AssetImage` for static images and `cached_network_image` for remote images.
+- Asynchronously load large assets and handle them with loading indicators.
+
+---
+
+### **Testing**
+- Write unit tests for critical business logic and services.
+- Use **WidgetTester** for testing UI components.
+- Test navigation flows and state updates using integration tests.
+- Follow the Arrange-Act-Assert convention for tests.
+- Write acceptance tests for each module following the Given-When-Then convention.
+
+---
+
+### **Security**
+- Sanitize all inputs to prevent injection attacks.
+- Encrypt sensitive data (e.g., user credentials, health data).
+- Use **HTTPS** for all network communication.
+- Obfuscate code for production builds using `flutter build --release` with ProGuard/R8 enabled.
+
+---
+
+### **Project-Specific Rules**
+- Include these essential features in the Medialert app:
+  - A **dashboard** displaying family members and their medication schedules.
+  - A **form** to manage family members and add or edit medication inventory per member.
+  - An **inventory tracker** to monitor medicine stock levels and alert when running low.
+  - **Push notifications** to remind users of upcoming medication times or inventory replenishment.
+  - Dark mode toggle in settings.
+- Ensure that the app is **accessible** and supports screen readers.
+- Focus on creating a user-friendly interface with clear navigation and intuitive controls.
+
+---
+
+Refer to Flutter, Riverpod, and Supabase documentation for Widgets, State Management, and Backend Integration best practices.
+

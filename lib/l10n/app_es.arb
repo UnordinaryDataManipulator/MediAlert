@@ -1,0 +1,91 @@
+{
+  "@@locale": "es",
+  
+  "appName": "MediAlert",
+  
+  "addFamilyMember": "Agregar Familiar",
+  
+  "editFamilyMember": "Editar Familiar",
+  
+  "addMedicine": "Agregar Medicamento",
+  
+  "editMedicine": "Editar Medicamento",
+  
+  "name": "Nombre",
+  
+  "relationship": "Relación",
+  
+  "dateOfBirth": "Fecha de Nacimiento",
+  
+  "notes": "Notas",
+  
+  "dosage": "Dosis",
+  
+  "frequency": "Frecuencia",
+  
+  "currentStock": "Stock Actual",
+  
+  "minimumStock": "Stock Mínimo",
+  
+  "expiryDate": "Fecha de Vencimiento",
+  
+  "instructions": "Instrucciones",
+  
+  "prescriptionPhoto": "Foto de Receta",
+  
+  "takePrescriptionPhoto": "Tomar Foto",
+  
+  "pickPrescriptionPhoto": "Elegir de la Galería",
+  
+  "medicineHistory": "Historial de Medicamentos",
+  
+  "intake": "Toma",
+  
+  "restock": "Reposición",
+  
+  "adjustment": "Ajuste",
+  
+  "disposal": "Eliminación",
+  
+  "prescribed": "Recetado",
+  
+  "quantity": "Cantidad",
+  
+  "save": "Guardar",
+  
+  "cancel": "Cancelar",
+  
+  "delete": "Eliminar",
+  
+  "confirmDelete": "¿Está seguro que desea eliminar esto?",
+  
+  "error": "Error",
+  
+  "success": "Éxito",
+  
+  "loading": "Cargando...",
+  
+  "noData": "No hay datos disponibles",
+  
+  "adherenceRate": "Tasa de Adherencia",
+  
+  "adherenceRateValue": "{rate}% de adherencia",
+  
+  "lastTaken": "Última toma hace {timeAgo}",
+  
+  "lowStockWarning": "Advertencia de stock bajo",
+  
+  "expiryWarning": "Advertencia de vencimiento",
+  
+  "settings": "Configuración",
+  
+  "language": "Idioma",
+  
+  "theme": "Tema",
+  
+  "darkMode": "Modo Oscuro",
+  
+  "lightMode": "Modo Claro",
+  
+  "systemDefault": "Predeterminado del Sistema"
+} 

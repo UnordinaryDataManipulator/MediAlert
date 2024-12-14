@@ -1,0 +1,237 @@
+{
+  "@@locale": "en",
+  
+  "appName": "MediAlert",
+  "@appName": {
+    "description": "The name of the application"
+  },
+
+  "addFamilyMember": "Add Family Member",
+  "@addFamilyMember": {
+    "description": "Button to add a new family member"
+  },
+
+  "editFamilyMember": "Edit Family Member",
+  "@editFamilyMember": {
+    "description": "Button to edit a family member"
+  },
+
+  "addMedicine": "Add Medicine",
+  "@addMedicine": {
+    "description": "Button to add a new medicine"
+  },
+
+  "editMedicine": "Edit Medicine",
+  "@editMedicine": {
+    "description": "Button to edit a medicine"
+  },
+
+  "name": "Name",
+  "@name": {
+    "description": "Label for name field"
+  },
+
+  "relationship": "Relationship",
+  "@relationship": {
+    "description": "Label for relationship field"
+  },
+
+  "dateOfBirth": "Date of Birth",
+  "@dateOfBirth": {
+    "description": "Label for date of birth field"
+  },
+
+  "notes": "Notes",
+  "@notes": {
+    "description": "Label for notes field"
+  },
+
+  "dosage": "Dosage",
+  "@dosage": {
+    "description": "Label for dosage field"
+  },
+
+  "frequency": "Frequency",
+  "@frequency": {
+    "description": "Label for frequency field"
+  },
+
+  "currentStock": "Current Stock",
+  "@currentStock": {
+    "description": "Label for current stock field"
+  },
+
+  "minimumStock": "Minimum Stock",
+  "@minimumStock": {
+    "description": "Label for minimum stock field"
+  },
+
+  "expiryDate": "Expiry Date",
+  "@expiryDate": {
+    "description": "Label for expiry date field"
+  },
+
+  "instructions": "Instructions",
+  "@instructions": {
+    "description": "Label for instructions field"
+  },
+
+  "prescriptionPhoto": "Prescription Photo",
+  "@prescriptionPhoto": {
+    "description": "Label for prescription photo"
+  },
+
+  "takePrescriptionPhoto": "Take Photo",
+  "@takePrescriptionPhoto": {
+    "description": "Button to take a prescription photo"
+  },
+
+  "pickPrescriptionPhoto": "Pick from Gallery",
+  "@pickPrescriptionPhoto": {
+    "description": "Button to pick a prescription photo from gallery"
+  },
+
+  "medicineHistory": "Medicine History",
+  "@medicineHistory": {
+    "description": "Title for medicine history section"
+  },
+
+  "intake": "Intake",
+  "@intake": {
+    "description": "Label for medicine intake"
+  },
+
+  "restock": "Restock",
+  "@restock": {
+    "description": "Label for medicine restock"
+  },
+
+  "adjustment": "Adjustment",
+  "@adjustment": {
+    "description": "Label for stock adjustment"
+  },
+
+  "disposal": "Disposal",
+  "@disposal": {
+    "description": "Label for medicine disposal"
+  },
+
+  "prescribed": "Prescribed",
+  "@prescribed": {
+    "description": "Label for medicine prescription"
+  },
+
+  "quantity": "Quantity",
+  "@quantity": {
+    "description": "Label for quantity field"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+
+  "confirmDelete": "Are you sure you want to delete this?",
+  "@confirmDelete": {
+    "description": "Confirmation message for deletion"
+  },
+
+  "error": "Error",
+  "@error": {
+    "description": "Generic error message"
+  },
+
+  "success": "Success",
+  "@success": {
+    "description": "Generic success message"
+  },
+
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading message"
+  },
+
+  "noData": "No data available",
+  "@noData": {
+    "description": "Message when no data is available"
+  },
+
+  "adherenceRate": "Adherence Rate",
+  "@adherenceRate": {
+    "description": "Label for adherence rate"
+  },
+
+  "adherenceRateValue": "{rate}% adherence",
+  "@adherenceRateValue": {
+    "description": "Adherence rate value with percentage",
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "decimalPattern",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+
+  "lastTaken": "Last taken {timeAgo}",
+  "@lastTaken": {
+    "description": "Time since last medicine intake",
+    "placeholders": {
+      "timeAgo": {
+        "type": "String"
+      }
+    }
+  },
+
+  "lowStockWarning": "Low stock warning",
+  "@lowStockWarning": {
+    "description": "Warning message for low stock"
+  },
+
+  "expiryWarning": "Expiry warning",
+  "@expiryWarning": {
+    "description": "Warning message for expiring medicine"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language selection option"
+  },
+
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme selection option"
+  },
+
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode option"
+  },
+
+  "lightMode": "Light Mode",
+  "@lightMode": {
+    "description": "Light mode option"
+  },
+
+  "systemDefault": "System Default",
+  "@systemDefault": {
+    "description": "System default option"
+  }
+} 
