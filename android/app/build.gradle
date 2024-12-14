@@ -23,9 +23,9 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = '1.8'
         // Enable incremental compilation for Kotlin
-        incremental = true
+        // incremental true
         // Enable parallel tasks execution
         parallel = true
         // Optimize Kotlin compilation
