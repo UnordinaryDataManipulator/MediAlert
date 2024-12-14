@@ -1,8 +1,6 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    id "kotlin-kapt"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -18,26 +16,26 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-        // Enable compilation in parallel
-        encoding = "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        encoding "UTF-8"
     }
 
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
     defaultConfig {
-        applicationId = "com.example.medialert"
-        minSdk = 21
-        targetSdk = flutter.targetSdkVersion
-        versionCode = 1
-        versionName = "1.0.0"
-        multiDexEnabled = true
-        
-        // Enable R8 optimization
-        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        applicationId "com.example.medialert"
+        minSdkVersion 21
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -53,23 +51,15 @@ android {
 
     buildTypes {
         release {
-            signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            
-            buildConfigField "boolean", "ENABLE_OPTIMIZATION", "true"
-            zipAlignEnabled true
-            debuggable false
         }
         debug {
-            applicationIdSuffix ".debug"
-            debuggable true
             minifyEnabled false
             shrinkResources false
-            
-            buildConfigField "boolean", "ENABLE_OPTIMIZATION", "false"
-            crunchPngs false
+            debuggable true
         }
     }
 
@@ -77,57 +67,24 @@ android {
         buildConfig true
     }
 
-    // Optimize compilation
-    tasks.withType(JavaCompile) {
-        options.incremental = true
-        options.fork = true
-        options.failOnError = false
-    }
-
-    // Optimize resource processing
-    aaptOptions {
-        cruncherEnabled = false
-        cruncherProcesses = 1
-        noCompress "tflite"
-        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
-    }
-
-    // Optimize dex processing
-    dexOptions {
-        preDexLibraries = true
-        maxProcessCount = Runtime.runtime.availableProcessors()
-        javaMaxHeapSize = "2g"
-        jumboMode = true
-        threads = Runtime.runtime.availableProcessors()
-    }
-
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/*.kotlin_module'
-        exclude '**.properties'
-        exclude '**.bin'
-    }
-
     lint {
+        disable 'InvalidPackage'
         checkReleaseBuilds false
         abortOnError false
-        disable 'InvalidPackage'
-        disable 'GradleDependency'
+    }
+
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount Runtime.runtime.availableProcessors()
+        javaMaxHeapSize "4g"
     }
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.window:window:1.0.0'
-    implementation 'androidx.window:window-java:1.0.0'
 }
 
 flutter {
-    source = "../.."
+    source '../..'
 }
