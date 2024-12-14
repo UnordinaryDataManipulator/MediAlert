@@ -1,16 +1,29 @@
-# medialert
+# Medialert App
 
-A new Flutter project.
+A Flutter-based mobile application for managing medication schedules and reminders for family members.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- 📱 **Dashboard**: View family members and their medication schedules
+- 📝 **Medication Management**: Add/edit medication inventory per family member
+- 📊 **Inventory Tracking**: Monitor medicine stock levels with low-stock alerts
+- 🔔 **Smart Notifications**: Reminders for medication times and inventory replenishment
+- 🌓 **Dark Mode**: Toggle between light and dark themes
+- ♿ **Accessibility**: Full support for screen readers and accessibility features
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Framework**: Flutter
+- **State Management**: Riverpod
+- **Local Storage**: Hive/Sqflite
+- **Notifications**: flutter_local_notifications
+- **Navigation**: go_router
+- **Code Generation**: Freezed
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project Structure
+
+```
+lib/
+├── models/      # Data models and state classes
+├── services/    # Backend and API integration
+├── screens/     # Main
