@@ -1,83 +1,60 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
-part 'medicine.freezed.dart';
 part 'medicine.g.dart';
 
-@freezed
 @HiveType(typeId: 1)
-class Medicine with _$Medicine {
+class Medicine extends HiveObject {
   @HiveField(0)
-  const factory Medicine({
-    @HiveField(0) required String id,
-    @HiveField(1) required String name,
-    @HiveField(2) required String dosage,
-    @HiveField(3) required String frequency,
-    @HiveField(4) required int currentQuantity,
-    @HiveField(5) required int minimumQuantity,
-    @HiveField(6) String? instructions,
-    @HiveField(7) String? imageUrl,
-    @HiveField(8) required List<DateTime> scheduledTimes,
-    @HiveField(9) DateTime? expiryDate,
-    @HiveField(10) Map<String, dynamic> metadata = const {},
-  }) = _Medicine;
+  String id;
 
-  factory Medicine.fromJson(Map<String, dynamic> json) =>
-      _$MedicineFromJson(json);
-}
-
-@freezed
-class MedicineHistoryEntry with _$MedicineHistoryEntry {
-  @HiveType(typeId: 2)
-  const factory MedicineHistoryEntry({
-    @HiveField(0)
-    required String id,
-    
-    @HiveField(1)
-    required DateTime timestamp,
-    
-    @HiveField(2)
-    required HistoryType type,
-    
-    @HiveField(3)
-    required int quantityChange,
-    
-    @HiveField(4)
-    required int newQuantity,
-    
-    @HiveField(5)
-    String? note,
-    
-    @HiveField(6)
-    required String userId,
-    
-    @HiveField(7)
-    @Default({}) Map<String, dynamic> metadata,
-  }) = _MedicineHistoryEntry;
-
-  factory MedicineHistoryEntry.fromJson(Map<String, dynamic> json) =>
-      _$MedicineHistoryEntryFromJson(json);
-}
-
-@HiveType(typeId: 3)
-enum HistoryType {
-  @HiveField(0)
-  intake,
-  
   @HiveField(1)
-  restock,
-  
+  String name;
+
   @HiveField(2)
-  adjustment,
-  
+  String dosageInstructions;
+
   @HiveField(3)
-  disposal,
-  
+  List<String> scheduledTimes;
+
   @HiveField(4)
-  prescribed,
-  
+  int quantity;
+
   @HiveField(5)
-  other
+  int alertThreshold;
+
+  @HiveField(6)
+  String familyMemberId;
+
+  Medicine({
+    required this.id,
+    required this.name,
+    required this.dosageInstructions,
+    required this.scheduledTimes,
+    required this.quantity,
+    required this.alertThreshold,
+    required this.familyMemberId,
+  });
+
+  bool get needsRefill => quantity <= alertThreshold;
+
+  Medicine copyWith({
+    String? id,
+    String? name,
+    String? dosageInstructions,
+    List<String>? scheduledTimes,
+    int? quantity,
+    int? alertThreshold,
+    String? familyMemberId,
+  }) {
+    return Medicine(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      dosageInstructions: dosageInstructions ?? this.dosageInstructions,
+      scheduledTimes: scheduledTimes ?? List.from(this.scheduledTimes),
+      quantity: quantity ?? this.quantity,
+      alertThreshold: alertThreshold ?? this.alertThreshold,
+      familyMemberId: familyMemberId ?? this.familyMemberId,
+    );
+  }
 }
 

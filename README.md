@@ -1,29 +1,58 @@
-# Medialert App
+# MediAlert
 
-A Flutter-based mobile application for managing medication schedules and reminders for family members.
+A simple medication reminder app built with Flutter.
 
-## Features
+## Core Features
+- Add and manage medicines with dosage information
+- Track medicine quantities and get low stock alerts
+- Set medication schedules and receive reminders
+- Manage multiple family members' medications
 
-- 📱 **Dashboard**: View family members and their medication schedules
-- 📝 **Medication Management**: Add/edit medication inventory per family member
-- 📊 **Inventory Tracking**: Monitor medicine stock levels with low-stock alerts
-- 🔔 **Smart Notifications**: Reminders for medication times and inventory replenishment
-- 🌓 **Dark Mode**: Toggle between light and dark themes
-- ♿ **Accessibility**: Full support for screen readers and accessibility features
+## Technical Stack
+- Flutter SDK (>=3.0.0)
+- Local storage with Hive
+- State management with Provider
+- Local notifications
 
-## Tech Stack
+## Quick Start
+1. Install dependencies:
+```bash
+flutter pub get
+```
 
-- **Framework**: Flutter
-- **State Management**: Riverpod
-- **Local Storage**: Hive/Sqflite
-- **Notifications**: flutter_local_notifications
-- **Navigation**: go_router
-- **Code Generation**: Freezed
+2. Generate Hive adapters:
+```bash
+flutter pub run build_runner build
+```
+
+3. Run the app:
+```bash
+flutter run
+```
 
 ## Project Structure
-
 ```
 lib/
-├── models/      # Data models and state classes
-├── services/    # Backend and API integration
-├── screens/     # Main
+├── models/          # Data models
+├── providers/       # State management
+├── screens/         # UI screens
+├── services/        # Core services
+└── widgets/        # UI components
+```
+
+## Dependencies
+- provider: ^6.1.1
+- hive: ^2.0.4
+- hive_flutter: ^1.1.0
+- path_provider: ^2.0.11
+- flutter_local_notifications: ^15.1.0+1
+
+## Contributing
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## License
+MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import '../models/medicine.dart';
-import '../providers/app_provider.dart';
-import '../utils/constants.dart';
-import '../services/reminder_service.dart';
+import '../providers/app_state.dart';
 import 'package:uuid/uuid.dart';
 
 class AddMedicineDialog extends StatefulWidget {
@@ -23,50 +21,41 @@ class AddMedicineDialog extends StatefulWidget {
 class _AddMedicineDialogState extends State<AddMedicineDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _dosageController = TextEditingController();
-  final _frequencyController = TextEditingController();
-  final _quantityController = TextEditingController();
-  final _minQuantityController = TextEditingController();
   final _instructionsController = TextEditingController();
-  DateTime? _expiryDate;
-  String? _imageUrl;
+  final _quantityController = TextEditingController();
+  final _thresholdController = TextEditingController();
+  final List<String> _scheduledTimes = [];
 
   @override
   void initState() {
     super.initState();
     if (widget.medicine != null) {
       _nameController.text = widget.medicine!.name;
-      _dosageController.text = widget.medicine!.dosage;
-      _frequencyController.text = widget.medicine!.frequency;
-      _quantityController.text = widget.medicine!.currentQuantity.toString();
-      _minQuantityController.text = widget.medicine!.minimumQuantity.toString();
-      _instructionsController.text = widget.medicine!.instructions ?? '';
-      _expiryDate = widget.medicine!.expiryDate;
-      _imageUrl = widget.medicine!.imageUrl;
+      _instructionsController.text = widget.medicine!.dosageInstructions;
+      _quantityController.text = widget.medicine!.quantity.toString();
+      _thresholdController.text = widget.medicine!.alertThreshold.toString();
+      _scheduledTimes.addAll(widget.medicine!.scheduledTimes);
     }
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _dosageController.dispose();
-    _frequencyController.dispose();
-    _quantityController.dispose();
-    _minQuantityController.dispose();
     _instructionsController.dispose();
+    _quantityController.dispose();
+    _thresholdController.dispose();
     super.dispose();
   }
 
-  Future<void> _selectExpiryDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _addTime() async {
+    final TimeOfDay? time = await showTimePicker(
       context: context,
-      initialDate: _expiryDate ?? DateTime.now().add(const Duration(days: 365)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 3650)), // 10 years
+      initialTime: TimeOfDay.now(),
     );
-    if (picked != null) {
+    
+    if (time != null) {
       setState(() {
-        _expiryDate = picked;
+        _scheduledTimes.add('${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}');
       });
     }
   }
@@ -84,144 +73,65 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Name',
-                  hintText: 'Enter medicine name',
+                  labelText: 'Medicine Name',
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return ErrorMessages.requiredField;
-                  }
-                  if (value.length > ValidationConstants.maxNameLength) {
-                    return 'Name is too long';
-                  }
-                  return null;
-                },
+                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
               ),
-              const SizedBox(height: AppTheme.smallPadding),
+              const SizedBox(height: 16),
               TextFormField(
-                controller: _dosageController,
+                controller: _instructionsController,
                 decoration: const InputDecoration(
-                  labelText: 'Dosage',
-                  hintText: 'E.g., 500mg, 2 tablets',
+                  labelText: 'Dosage Instructions',
+                  hintText: 'E.g., 1 tablet twice daily with meals',
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return ErrorMessages.requiredField;
-                  }
-                  return null;
-                },
+                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                maxLines: 2,
               ),
-              const SizedBox(height: AppTheme.smallPadding),
-              TextFormField(
-                controller: _frequencyController,
-                decoration: const InputDecoration(
-                  labelText: 'Frequency',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return ErrorMessages.requiredField;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: AppTheme.smallPadding),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
                       controller: _quantityController,
                       decoration: const InputDecoration(
-                        labelText: 'Current Stock',
+                        labelText: 'Quantity',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return ErrorMessages.requiredField;
-                        }
-                        final number = int.tryParse(value);
-                        if (number == null || number < 0) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        final number = int.tryParse(value);
-                        if (number != null) {
-                          _currentQuantity = number;
-                        }
-                      },
+                      validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
                     ),
                   ),
-                  const SizedBox(width: AppTheme.defaultPadding),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
-                      controller: _minQuantityController,
+                      controller: _thresholdController,
                       decoration: const InputDecoration(
-                        labelText: 'Minimum Stock',
+                        labelText: 'Alert When Below',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return ErrorMessages.requiredField;
-                        }
-                        final number = int.tryParse(value);
-                        if (number == null || number < 0) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        final number = int.tryParse(value);
-                        if (number != null) {
-                          _minimumQuantity = number;
-                        }
-                      },
+                      validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: AppTheme.smallPadding),
-              ListTile(
-                title: const Text('Expiry Date'),
-                subtitle: Text(
-                  _expiryDate == null
-                      ? 'Not set'
-                      : '${_expiryDate!.year}-${_expiryDate!.month.toString().padLeft(2, '0')}-${_expiryDate!.day.toString().padLeft(2, '0')}',
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (_expiryDate != null)
-                      IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _expiryDate = null;
-                          });
-                        },
-                      ),
-                    IconButton(
-                      icon: const Icon(Icons.calendar_today),
-                      onPressed: () => _selectExpiryDate(context),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const Text('Scheduled Times:'),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: _addTime,
+                  ),
+                ],
               ),
-              const SizedBox(height: AppTheme.smallPadding),
-              TextFormField(
-                controller: _instructionsController,
-                decoration: const InputDecoration(
-                  labelText: 'Instructions',
-                  hintText: 'Add any special instructions',
+              if (_scheduledTimes.isNotEmpty)
+                Wrap(
+                  spacing: 8,
+                  children: _scheduledTimes.map((time) => Chip(
+                    label: Text(time),
+                    onDeleted: () => setState(() => _scheduledTimes.remove(time)),
+                  )).toList(),
                 ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value != null && value.length > ValidationConstants.maxNotesLength) {
-                    return 'Instructions are too long';
-                  }
-                  return null;
-                },
-              ),
             ],
           ),
         ),
@@ -232,45 +142,30 @@ class _AddMedicineDialogState extends State<AddMedicineDialog> {
           child: const Text('Cancel'),
         ),
         FilledButton(
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
+          onPressed: () {
+            if (_formKey.currentState!.validate() && _scheduledTimes.isNotEmpty) {
               final medicine = Medicine(
                 id: widget.medicine?.id ?? const Uuid().v4(),
                 name: _nameController.text,
-                dosage: _dosageController.text,
-                frequency: _frequencyController.text,
-                expiryDate: _expiryDate,
-                currentQuantity: _currentQuantity,
-                minimumQuantity: _minimumQuantity,
-                instructions: _instructionsController.text.isEmpty
-                    ? null
-                    : _instructionsController.text,
-                barcode: widget.medicine?.barcode,
-                imageUrl: widget.medicine?.imageUrl,
-                scheduledTimes: widget.medicine?.scheduledTimes ?? [],
-                metadata: {
-                  ...widget.medicine?.metadata ?? {},
-                  'familyMemberId': widget.familyMemberId,
-                },
+                dosageInstructions: _instructionsController.text,
+                quantity: int.parse(_quantityController.text),
+                alertThreshold: int.parse(_thresholdController.text),
+                scheduledTimes: List.from(_scheduledTimes),
+                familyMemberId: widget.familyMemberId,
               );
 
+              final appState = context.read<AppState>();
               if (widget.medicine == null) {
-                await ref
-                    .read(medicinesNotifierProvider.notifier)
-                    .addMedicine(medicine);
+                appState.addMedicine(medicine);
               } else {
-                await ref
-                    .read(medicinesNotifierProvider.notifier)
-                    .updateMedicine(medicine);
+                appState.updateMedicine(medicine);
               }
 
-              // Schedule reminders
-              final reminderService = ReminderService();
-              await reminderService.scheduleMedicineReminder(medicine);
-
-              if (mounted) {
-                Navigator.of(context).pop();
-              }
+              Navigator.of(context).pop();
+            } else if (_scheduledTimes.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Add at least one scheduled time')),
+              );
             }
           },
           child: Text(widget.medicine == null ? 'Add' : 'Save'),
