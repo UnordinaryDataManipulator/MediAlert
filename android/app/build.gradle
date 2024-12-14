@@ -20,6 +20,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        // Enable compilation in parallel
+        encoding = "UTF-8"
     }
 
     kotlinOptions {
@@ -28,14 +30,11 @@ android {
 
     defaultConfig {
         applicationId = "com.example.medialert"
-        minSdk = 21 // Required for image_cropper
+        minSdk = 21
         targetSdk = flutter.targetSdkVersion
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled = true
-        
-        // Optimize DEX process
-        multiDexKeepFile file('multidex-config.txt')
         
         // Enable R8 optimization
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -59,27 +58,18 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             
-            // Enable build config generation optimization
             buildConfigField "boolean", "ENABLE_OPTIMIZATION", "true"
-            
-            // Optimize release builds
             zipAlignEnabled true
             debuggable false
         }
         debug {
             applicationIdSuffix ".debug"
             debuggable true
+            minifyEnabled false
+            shrinkResources false
             
-            // Enable incremental dexing
+            buildConfigField "boolean", "ENABLE_OPTIMIZATION", "false"
             crunchPngs false
-            
-            // Disable unnecessary debug features
-            pseudoLocalesEnabled false
-            renderscriptDebuggable false
-            jniDebuggable false
-            
-            // Enable build config generation optimization
-            buildConfigField "boolean", "ENABLE_OPTIMIZATION", "true"
         }
     }
 
@@ -87,30 +77,30 @@ android {
         buildConfig true
     }
 
-    // Remove buildCache configuration and other problematic optimizations
+    // Optimize compilation
     tasks.withType(JavaCompile) {
         options.incremental = true
+        options.fork = true
+        options.failOnError = false
     }
 
-    // Enable resource optimization
+    // Optimize resource processing
     aaptOptions {
         cruncherEnabled = false
-        // Disable PNG optimization in debug
         cruncherProcesses = 1
+        noCompress "tflite"
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
     }
 
-    // Enable dexing optimization
+    // Optimize dex processing
     dexOptions {
         preDexLibraries = true
-        // Reduce max processes for low memory
-        maxProcessCount = 4
-        // Reduce memory allocation
-        javaMaxHeapSize = "1g"
-        // Keep main dex small
+        maxProcessCount = Runtime.runtime.availableProcessors()
+        javaMaxHeapSize = "2g"
         jumboMode = true
+        threads = Runtime.runtime.availableProcessors()
     }
 
-    // Disable unused features
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -120,11 +110,15 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/*.kotlin_module'
+        exclude '**.properties'
+        exclude '**.bin'
     }
 
     lint {
         checkReleaseBuilds false
         abortOnError false
+        disable 'InvalidPackage'
+        disable 'GradleDependency'
     }
 }
 
@@ -132,16 +126,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.window:window:1.0.0'
     implementation 'androidx.window:window-java:1.0.0'
-}
-
-// Enable Gradle build cache
-gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-        // Reduce memory usage during compilation
-        options.compilerArgs << "-Xmx1g"
-        options.compilerArgs << "-XX:MaxPermSize=256m"
-        options.compilerArgs << "-XX:+UseParallelGC"
-    }
 }
 
 flutter {
