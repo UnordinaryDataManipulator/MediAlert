@@ -87,18 +87,9 @@ android {
         buildConfig true
     }
 
-    // Enable build cache
-    buildCache {
-        enabled = true
-        // Push the cache dir to external storage if available
-        dir = new File(rootProject.buildDir, 'build-cache')
-    }
-
-    // Enable Gradle build cache
+    // Remove buildCache configuration and other problematic optimizations
     tasks.withType(JavaCompile) {
         options.incremental = true
-        // Reduce memory usage during compilation
-        options.compilerArgs << '-Xlint:none'
     }
 
     // Enable resource optimization
